@@ -23,6 +23,7 @@ export default class Alert extends EnemyState {
     
     // Receives options.target
     onEnter(options: Record<string, any>): void {
+        this.path=this.owner.getScene().getNavigationManager().getPath(hw3_Names.NAVMESH, this.owner.position, options.target);
         this.alertTimer.start();
     }
 
@@ -42,6 +43,8 @@ export default class Alert extends EnemyState {
             // The timer is up, return to the default state
             this.finished(EnemyStates.DEFAULT);
             return;
+        }else{
+            this.owner.moveOnPath(this.parent.speed *deltaT, this.path)
         }
 
         if(this.parent.getPlayerPosition() !== null){

@@ -56,6 +56,10 @@ export default class Patrol extends EnemyState {
         // If the enemy sees the player, start attacking
         if(this.parent.getPlayerPosition() !== null){
             this.finished(EnemyStates.ATTACKING);
+        }else{
+            this.currentPath=this.getNextPath();
+            this.owner.moveOnPath(this.parent.speed *deltaT, this.currentPath)
+            //this.owner.rotation = Vec2.UP.angleToCCW(this.currentPath.getMoveDirection(this.owner));
         }
     }
 
