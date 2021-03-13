@@ -59,7 +59,7 @@ export default class Patrol extends EnemyState {
         }else{
             this.currentPath=this.getNextPath();
             this.owner.moveOnPath(this.parent.speed *deltaT, this.currentPath)
-            //this.owner.rotation = Vec2.UP.angleToCCW(this.currentPath.getMoveDirection(this.owner));
+            this.owner.rotation = Vec2.UP.angleToCCW(this.currentPath.getMoveDirection(this.owner));
         }
     }
 
