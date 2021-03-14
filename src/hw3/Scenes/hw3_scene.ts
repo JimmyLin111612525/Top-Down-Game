@@ -340,7 +340,7 @@ export default class hw3_scene extends Scene {
             this.enemies[i].addPhysics(new AABB(Vec2.ZERO, new Vec2(5, 5)));
 
             if(data.route){
-                data.route = data.route.map((index: number) => this.graph.getNodePosition(index));                
+                data.route = data.route.map((index: number) => this.graph.getNodePosition(index));               
             }
 
             if(data.guardPosition){

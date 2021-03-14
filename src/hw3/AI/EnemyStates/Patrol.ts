@@ -20,21 +20,22 @@ export default class Patrol extends EnemyState {
     // A return object for exiting this state
     protected retObj: Record<string, any>;
 
-    constructor(parent: EnemyAI, owner: GameNode, patrolRoute: Array<Vec2>){
+    constructor(parent: EnemyAI, owner: GameNode, patrolRoute: Array<Vec2>) {
         super(parent, owner);
-
         this.patrolRoute = patrolRoute;
         this.routeIndex = 0;
     }
 
-    onEnter(options: Record<string, any>): void {}
+    onEnter(options: Record<string, any>): void {
+        this.currentPath=this.getNextPath();
+    }
 
     handleInput(event: GameEvent): void {
-        if(event.type === hw3_Events.SHOT_FIRED){
+        if (event.type === hw3_Events.SHOT_FIRED) {
             // Shot was fired. Go check it out if it was close to us
-            if(this.owner.position.distanceTo(event.data.get("position")) < event.data.get("volume")){
+            if (this.owner.position.distanceTo(event.data.get("position")) < event.data.get("volume")) {
                 // Shot was close enough to hear, go to the alert state
-                this.retObj = {target: event.data.get("position")};
+                this.retObj = { target: event.data.get("position") };
                 this.finished(EnemyStates.ALERT);
             }
         }
@@ -54,12 +55,18 @@ export default class Patrol extends EnemyState {
      */
     update(deltaT: number): void {
         // If the enemy sees the player, start attacking
-        if(this.parent.getPlayerPosition() !== null){
+        if (this.parent.getPlayerPosition() !== null) {
             this.finished(EnemyStates.ATTACKING);
-        }else{
-            this.currentPath=this.getNextPath();
-            this.owner.moveOnPath(this.parent.speed *deltaT, this.currentPath)
-            this.owner.rotation = Vec2.UP.angleToCCW(this.currentPath.getMoveDirection(this.owner));
+        } else {
+            if (this.currentPath.isDone()) {
+                this.currentPath = this.getNextPath();
+            }
+            else {
+
+                this.owner.moveOnPath(this.parent.speed * deltaT, this.currentPath);
+                this.owner.rotation = Vec2.UP.angleToCCW(this.currentPath.getMoveDirection(this.owner));
+            }
+
         }
     }
 
@@ -69,7 +76,7 @@ export default class Patrol extends EnemyState {
 
     getNextPath(): NavigationPath {
         let path = this.owner.getScene().getNavigationManager().getPath(hw3_Names.NAVMESH, this.owner.position, this.patrolRoute[this.routeIndex]);
-        this.routeIndex = (this.routeIndex + 1)%this.patrolRoute.length;
+        this.routeIndex = (this.routeIndex + 1) % this.patrolRoute.length;
         return path;
     }
 

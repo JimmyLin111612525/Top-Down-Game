@@ -45,6 +45,7 @@ export default class Alert extends EnemyState {
             return;
         }else{
             this.owner.moveOnPath(this.parent.speed *deltaT, this.path)
+            
         }
 
         if(this.parent.getPlayerPosition() !== null){
